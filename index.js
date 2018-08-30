@@ -108,7 +108,7 @@ export default class Onboarding extends Component {
                 titleStyles={titleStyles}
                 subtitleStyles={subtitleStyles}
                 width={width}
-                height={height}
+                height={height - 100}
               />
             )
           )}
