@@ -7,11 +7,16 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  Switch,
 } from "react-native";
 import tinycolor from "tinycolor2";
 
 import PageData from "./components/PageData";
 import Paginator from "./components/Paginator";
+
+const getDefaultStyle = isLight => ({
+  color: isLight ? "rgba(0, 0, 0, 0.8)" : "#fff",
+});
 
 export default class Onboarding extends Component {
   constructor() {
@@ -19,6 +24,7 @@ export default class Onboarding extends Component {
 
     this.state = {
       currentPage: 0,
+      neverDisplay: true,
     };
   }
 
@@ -50,6 +56,10 @@ export default class Onboarding extends Component {
     );
   };
 
+  _toggleNeverDisplay = () => {
+    this.setState({ neverDisplay: !this.state.neverDisplay });
+  };
+
   render() {
     const { width, height } = Dimensions.get("window");
     const {
@@ -60,6 +70,9 @@ export default class Onboarding extends Component {
       showDone,
       containerStyle,
       skipLabel,
+      displayNeverDisplay,
+      NeverDisplayComponent,
+      neverDisplayLabel,
     } = this.props;
     const currentPage = pages[this.state.currentPage] || pages[0];
     const { backgroundColor } = currentPage;
@@ -100,6 +113,25 @@ export default class Onboarding extends Component {
             )
           )}
         </ScrollView>
+        {displayNeverDisplay &&
+          this.state.currentPage === pages.length - 1 && (
+            <View style={styles.toggleContainer}>
+              {NeverDisplayComponent ? (
+                NeverDisplayComponent
+              ) : (
+                <View style={styles.toggleContainer}>
+                  <Text style={getDefaultStyle(isLight)}>
+                    {neverDisplayLabel || "Never display"}
+                  </Text>
+                  <Switch
+                    style={{ margin: 0 }}
+                    value={this.state.neverDisplay}
+                    onValueChange={this._toggleNeverDisplay}
+                  />
+                </View>
+              )}
+            </View>
+          )}
         <Paginator
           isLight={isLight}
           overlay={bottomOverlay}
@@ -130,6 +162,13 @@ Onboarding.propTypes = {
   showSkip: PropTypes.bool,
   showNext: PropTypes.bool,
   showDone: PropTypes.bool,
+  displayNeverDisplay: PropTypes.bool,
+  skipLabel: PropTypes.string,
+  neverDisplayLabel: PropTypes.string,
+  NeverDisplayComponent: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.func,
+  ]),
 };
 
 Onboarding.defaultProps = {
@@ -137,4 +176,16 @@ Onboarding.defaultProps = {
   showSkip: true,
   showNext: true,
   showDone: true,
+  displayNeverDisplay: true,
 };
+
+const styles = StyleSheet.create({
+  toggleContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    alignSelf: "center",
+    margin: 10,
+    width: "95%",
+  },
+});
