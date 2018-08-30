@@ -10,7 +10,7 @@ const getDefaultStyle = isLight => ({
 
 const SkipButton = ({ isLight, ...props }) => (
   <TextButton {...props} textStyle={getDefaultStyle(isLight)}>
-    Skip
+    {props.skipLabel || "Skip"}
   </TextButton>
 );
 
@@ -44,13 +44,19 @@ const Paginator = ({
   currentPage,
   onEnd,
   onNext,
+  skipLabel,
 }) => (
   <View
     style={{ ...styles.container, ...(overlay ? styles.containerOverlay : {}) }}
   >
     <View style={styles.buttonLeft}>
       {showSkip && currentPage + 1 !== pages ? (
-        <SkipButton isLight={isLight} size={BUTTON_SIZE} onPress={onEnd} />
+        <SkipButton
+          isLight={isLight}
+          skipLabel={skipLabel}
+          size={BUTTON_SIZE}
+          onPress={onEnd}
+        />
       ) : null}
     </View>
     <PageDots isLight={isLight} pages={pages} currentPage={currentPage} />

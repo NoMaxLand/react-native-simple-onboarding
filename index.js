@@ -52,18 +52,29 @@ export default class Onboarding extends Component {
 
   render() {
     const { width, height } = Dimensions.get("window");
-    const { pages, bottomOverlay, showSkip, showNext, showDone } = this.props;
+    const {
+      pages,
+      bottomOverlay,
+      showSkip,
+      showNext,
+      showDone,
+      containerStyle,
+      skipLabel,
+    } = this.props;
     const currentPage = pages[this.state.currentPage] || pages[0];
     const { backgroundColor } = currentPage;
     const isLight = tinycolor(backgroundColor).getBrightness() > 180;
 
     return (
       <View
-        style={{
-          flex: 1,
-          backgroundColor: backgroundColor,
-          justifyContent: "center",
-        }}
+        style={[
+          {
+            flex: 1,
+            backgroundColor: backgroundColor,
+            justifyContent: "center",
+          },
+          containerStyle,
+        ]}
       >
         <ScrollView
           ref="scroll"
@@ -99,6 +110,7 @@ export default class Onboarding extends Component {
           currentPage={this.state.currentPage}
           onEnd={this.props.onEnd}
           onNext={this.goNext}
+          skipLabel={skipLabel}
         />
       </View>
     );
